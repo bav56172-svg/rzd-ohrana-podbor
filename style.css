@@ -22,3 +22,130 @@ body {
   margin: 0 auto;
   padding: 0 24px;
 }
+
+/* Шапка */
+.header {
+  background: var(--rzd-white);
+  border-bottom: 3px solid var(--rzd-red);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 24px;
+}
+
+.header__logo {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.header__logo-mark {
+  color: var(--rzd-red);
+}
+
+.header__logo-text {
+  color: var(--rzd-dark);
+}
+
+.header__nav {
+  display: flex;
+  gap: 20px;
+}
+
+.header__nav a {
+  color: var(--rzd-dark);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.header__nav a:hover {
+  color: var(--rzd-red);
+}
+
+.header__phone {
+  color: var(--rzd-red);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+/* О компании */
+.about {
+  background: var(--rzd-grey);
+  padding: 56px 0;
+}
+
+.about h1 {
+  font-size: 32px;
+  margin: 0 0 16px;
+}
+
+.about__lead {
+  max-width: 640px;
+  color: var(--rzd-grey-dark);
+  line-height: 1.5;
+}
+
+.about__points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+
+.about__points li {
+  position: relative;
+  padding-left: 20px;
+}
+
+.about__points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--rzd-red);
+  border-radius: 50%;
+}
+
+/* Вакансия */
+.vacancy {
+  padding: 56px 0;
+}
+
+.vacancy h2 {
+  font-size: 26px;
+  margin: 0 0 24px;
+}
+
+.vacancy__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.vacancy__block h3 {
+  color: var(--rzd-red);
+  margin: 0 0 12px;
+}
+
+.vacancy__block ul {
+  padding-left: 18px;
+  line-height: 1.7;
+  color: var(--rzd-dark);
+}
+
+@media (max-width: 640px) {
+  .vacancy__grid {
+    grid-template-columns: 1fr;
+  }
+}
