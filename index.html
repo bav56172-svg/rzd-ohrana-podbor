@@ -8,19 +8,102 @@
 <body>
 
   <!-- Шапка -->
-  <header></header>
+  <header class="header">
+    <div class="container header__inner">
+      <div class="header__logo">
+        <span class="header__logo-mark">РЖД</span>
+        <span class="header__logo-text">Охрана</span>
+      </div>
+      <nav class="header__nav">
+        <a href="#about">О компании</a>
+        <a href="#vacancy">Вакансия</a>
+        <a href="#apply">Откликнуться</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+      <a href="tel:+70000000000" class="header__phone">+7 (000) 000-00-00</a>
+    </div>
+  </header>
 
   <!-- О компании -->
-  <section id="about"></section>
+  <section id="about" class="about">
+    <div class="container">
+      <h1>Набор охранников в ООО «РЖД-Охрана»</h1>
+      <p class="about__lead">
+        Ведомственная охрана объектов и грузов железнодорожного транспорта.
+        Официальное трудоустройство, стабильный график, обучение перед
+        допуском к работе.
+      </p>
+      <ul class="about__points">
+        <li>Официальное оформление по ТК РФ</li>
+        <li>Своевременная выплата зарплаты</li>
+        <li>Обучение и стажировка</li>
+        <li>Соцпакет</li>
+      </ul>
+    </div>
+  </section>
 
   <!-- Вакансия -->
-  <section id="vacancy"></section>
+  <section id="vacancy" class="vacancy">
+    <div class="container">
+      <h2>Вакансия: Охранник</h2>
+
+      <div class="vacancy__grid">
+        <div class="vacancy__block">
+          <h3>Требования</h3>
+          <ul>
+            <li>Гражданство РФ</li>
+            <li>Удостоверение частного охранника (или готовность получить)</li>
+            <li>Отсутствие судимости</li>
+            <li>Ответственность, внимательность, стрессоустойчивость</li>
+          </ul>
+        </div>
+        <div class="vacancy__block">
+          <h3>Условия</h3>
+          <ul>
+            <li>График: сменный (уточняется при собеседовании)</li>
+            <li>Место работы: объекты железнодорожного транспорта</li>
+            <li>Обучение перед допуском к работе</li>
+            <li>Официальное трудоустройство</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Форма отклика -->
-  <section id="apply"></section>
+  <section id="apply" class="apply">
+    <div class="container">
+      <h2>Откликнуться на вакансию</h2>
+      <form class="apply__form" action="#" method="post">
+        <label>
+          ФИО
+          <input type="text" name="name" required>
+        </label>
+        <label>
+          Телефон
+          <input type="tel" name="phone" required>
+        </label>
+        <label>
+          Резюме (по желанию)
+          <input type="file" name="resume">
+        </label>
+        <button type="submit">Отправить отклик</button>
+      </form>
+      <p class="apply__note">
+        Форма пока без обработчика — отправка данных требует настройки
+        backend (email-рассылка или приём заявок в базу).
+      </p>
+    </div>
+  </section>
 
   <!-- Контакты -->
-  <footer id="contacts"></footer>
+  <footer id="contacts" class="contacts">
+    <div class="container">
+      <p>ООО «РЖД-Охрана»</p>
+      <p>Телефон: <a href="tel:+70000000000">+7 (000) 000-00-00</a></p>
+      <p>Email: <a href="mailto:hr@rzd-ohrana.example">hr@rzd-ohrana.example</a></p>
+    </div>
+  </footer>
 
 </body>
 </html>
