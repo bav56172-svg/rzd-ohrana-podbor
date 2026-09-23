@@ -92,17 +92,26 @@ body {
 
 /* О компании */
 .about {
-  background: var(--rzd-grey);
-  padding: 56px 0;
+  background-color: var(--rzd-dark);
+  background-size: cover;
+  background-position: center right;
+  background-repeat: no-repeat;
+  padding: 64px 0;
+}
+
+.about__box {
+  max-width: 560px;
+  background: rgba(255, 255, 255, 0.94);
+  border-radius: var(--rzd-radius);
+  padding: 32px;
 }
 
 .about h1 {
-  font-size: 32px;
+  font-size: 30px;
   margin: 0 0 16px;
 }
 
 .about__lead {
-  max-width: 640px;
   color: var(--rzd-grey-dark);
   line-height: 1.5;
 }
@@ -142,10 +151,35 @@ body {
   margin: 0 0 24px;
 }
 
+.vacancy__top {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 32px;
+  align-items: start;
+}
+
+.vacancy__photo {
+  width: 100%;
+  border-radius: var(--rzd-radius);
+  object-fit: cover;
+  max-height: 360px;
+}
+
 .vacancy__grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 32px;
+}
+
+@media (max-width: 800px) {
+  .vacancy__top {
+    grid-template-columns: 1fr;
+  }
+
+  .vacancy__photo {
+    order: -1;
+    max-height: 260px;
+  }
 }
 
 .vacancy__block h3 {
