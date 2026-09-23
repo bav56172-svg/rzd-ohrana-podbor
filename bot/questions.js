@@ -116,3 +116,21 @@ export const questions = [
 export const maxScore = questions
   .filter((q) => q.options?.some((o) => typeof o.score === "number"))
   .reduce((sum, q) => sum + Math.max(...q.options.map((o) => o.score ?? 0)), 0);
+
+// Порог прохождения теста в процентах — считается "прошёл" от этого балла
+// и выше. Значение по умолчанию, поправить когда Андрей скажет конкретную
+// планку.
+export const PASS_THRESHOLD_PERCENT = 60;
+
+// Разряд удостоверения частного охранника — обязательный вопрос анкеты
+// кандидата (не входит в очковый тест, просто фиксируется в записи).
+export const gradeQuestion = {
+  id: "grade",
+  text: "Какой у вас разряд удостоверения частного охранника?",
+  options: [
+    { text: "4 разряд" },
+    { text: "5 разряд" },
+    { text: "6 разряд" },
+    { text: "Нет удостоверения / получаю" },
+  ],
+};
