@@ -40,18 +40,32 @@ body {
 
 .header__logo {
   display: flex;
-  align-items: baseline;
-  gap: 6px;
-  font-weight: 700;
-  font-size: 20px;
+  align-items: center;
+  gap: 10px;
 }
 
-.header__logo-mark {
-  color: var(--rzd-red);
+.header__logo-img {
+  height: 40px;
+  width: auto;
+}
+
+.header__logo-text-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
 }
 
 .header__logo-text {
   color: var(--rzd-dark);
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.header__logo-tagline {
+  color: var(--rzd-red);
+  font-size: 11px;
+  font-style: italic;
 }
 
 .header__nav {
