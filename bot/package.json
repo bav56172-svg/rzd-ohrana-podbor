@@ -1,0 +1,13 @@
+{
+  "name": "rzd-ohrana-test-bot",
+  "version": "0.1.0",
+  "description": "Бот в MAX для тестирования кандидатов на должность охранника — ООО «ОП «РЖД-ОХРАНА»",
+  "type": "module",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js"
+  },
+  "dependencies": {
+    "@maxhub/max-bot-api": "^0.3.1"
+  }
+}
