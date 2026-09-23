@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ООО «ОП «РЖД-ОХРАНА» — набор охранников</title>
+  <style>
+:root {
+  --rzd-red: #ee3524;
+  --rzd-dark: #333333;
+  --rzd-grey: #f2f2f2;
+  --rzd-grey-dark: #6b6b6b;
+  --rzd-white: #ffffff;
+  --rzd-radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Arial, sans-serif;
+  color: var(--rzd-dark);
+  background: var(--rzd-white);
+}
+
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.header {
+  background: var(--rzd-white);
+  border-bottom: 3px solid var(--rzd-red);
+}
+
+.header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px 24px;
+  flex-wrap: wrap;
+}
+
+.header__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header__logo-img {
+  height: 40px;
+  width: auto;
+}
+
+.header__logo-text-block {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.header__logo-text {
+  color: var(--rzd-dark);
+  font-weight: 700;
+  font-size: 18px;
+  text-transform: uppercase;
+}
+
+.header__logo-tagline {
+  color: var(--rzd-red);
+  font-size: 11px;
+  font-style: italic;
+}
+
+.header__nav {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.header__nav a {
+  color: var(--rzd-dark);
+  text-decoration: none;
+  font-size: 15px;
+}
+
+.header__nav a:hover {
+  color: var(--rzd-red);
+}
+
+.header__phone {
+  color: var(--rzd-red);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.about {
+  background: var(--rzd-grey);
+  padding: 56px 0;
+}
+
+.about h1 {
+  font-size: 32px;
+  margin: 0 0 16px;
+}
+
+.about__lead {
+  max-width: 640px;
+  color: var(--rzd-grey-dark);
+  line-height: 1.5;
+}
+
+.about__points {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 32px;
+  list-style: none;
+  padding: 0;
+  margin: 24px 0 0;
+}
+
+.about__points li {
+  position: relative;
+  padding-left: 20px;
+}
+
+.about__points li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 8px;
+  height: 8px;
+  background: var(--rzd-red);
+  border-radius: 50%;
+}
+
+.vacancy {
+  padding: 56px 0;
+}
+
+.vacancy h2 {
+  font-size: 26px;
+  margin: 0 0 24px;
+}
+
+.vacancy__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.vacancy__block h3 {
+  color: var(--rzd-red);
+  margin: 0 0 12px;
+}
+
+.vacancy__block ul {
+  padding-left: 18px;
+  line-height: 1.7;
+  color: var(--rzd-dark);
+}
+
+@media (max-width: 640px) {
+  .vacancy__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.benefits {
+  padding: 56px 0;
+}
+
+.benefits h2 {
+  font-size: 26px;
+  margin: 0 0 24px;
+}
+
+.benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.benefits__item {
+  padding: 20px;
+  background: var(--rzd-grey);
+  border-radius: var(--rzd-radius);
+}
+
+.benefits__item h3 {
+  color: var(--rzd-red);
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.benefits__item p {
+  font-size: 14px;
+  color: var(--rzd-grey-dark);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .benefits__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .benefits__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.apply {
+  background: var(--rzd-grey);
+  padding: 56px 0;
+}
+
+.apply h2 {
+  font-size: 26px;
+  margin: 0 0 24px;
+}
+
+.apply__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 420px;
+}
+
+.apply__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--rzd-grey-dark);
+}
+
+.apply__form input {
+  padding: 10px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.apply__form button {
+  align-self: flex-start;
+  padding: 12px 28px;
+  background: var(--rzd-red);
+  color: var(--rzd-white);
+  border: none;
+  border-radius: var(--rzd-radius);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.apply__form button:hover {
+  background: #b30c11;
+}
+
+.apply__note {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--rzd-grey-dark);
+}
+
+.contacts {
+  background: var(--rzd-dark);
+  color: var(--rzd-white);
+  padding: 32px 0;
+}
+
+.contacts p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.contacts a {
+  color: var(--rzd-white);
+}
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header__inner">
+      <div class="header__logo">
+        <svg class="header__logo-img" xmlns="http://www.w3.org/2000/svg" width="105" height="46" viewBox="0 0 105 46"><g><g><path fill="#ee3524" d="M75.952.972C76.9.03 78.095.03 79.042.03h9.879c3.564 0 8.925 0 12.487 3.551 3.567 3.551 3.567 8.764 3.567 10.66v5.69c0 1.899 0 7.112-3.567 10.67-3.562 3.55-8.923 3.55-12.487 3.55h-6.189c-3.096 0-5.355 0-7.261-.942-1.9-.95-3.335-2.85-4.75-4.743l-1.436-1.893c-1.019-1.345-1.78-2.373-1.78-3.796 0-1.42.83-2.518 1.78-3.787l5.702-7.582h14.29l-9.282 12.316c-.717.949-1.547 2.134-.953 3.435.594 1.307 2.142 1.307 3.332 1.307h6.902c.947 0 2.378 0 3.329-.95.95-.943.95-2.373.95-3.316V9.98c0-.953 0-2.376-.95-3.32-.95-.956-2.382-.956-3.329-.956h-14.29V4.053zM56.657 11.407h14.27l-17.126 22.75H39.53zM-.017 15.425c0-.943 0-2.131.95-3.081.95-.937 2.14-.937 3.096-.937h23.904c3.092 0 5.358 0 7.255.937 1.907.95 3.335 2.85 4.77 4.743l1.419 1.902c1.01 1.342 1.786 2.366 1.786 3.787 0 1.423-.827 2.523-1.786 3.796l-5.71 7.585H21.388L30.67 21.83c.717-.944 1.548-2.128.957-3.438-.602-1.304-2.146-1.304-3.341-1.304H17.11v28.442H5.693V17.087h-5.71z"/></g></g></svg>
+        <div class="header__logo-text-block">
+          <span class="header__logo-text">Охрана</span>
+          <span class="header__logo-tagline">Гарантия Вашей безопасности</span>
+        </div>
+      </div>
+      <nav class="header__nav">
+        <a href="#about">О компании</a>
+        <a href="#vacancy">Вакансия</a>
+        <a href="#benefits">Что мы предлагаем</a>
+        <a href="#apply">Откликнуться</a>
+        <a href="#contacts">Контакты</a>
+      </nav>
+      <a href="tel:+74956519908" class="header__phone">+7 495 651 99 08</a>
+    </div>
+  </header>
+
+  <section id="about" class="about">
+    <div class="container">
+      <h1>Набор охранников в ООО «ОП «РЖД-ОХРАНА»</h1>
+      <p class="about__lead">
+        Дочернее общество ОАО «Российские железные дороги». Крупнейшее
+        предприятие по охране объектов, имущества и обеспечению порядка
+        на объектах железнодорожного транспорта по всей России.
+      </p>
+      <ul class="about__points">
+        <li>Оформление строго по ТК РФ</li>
+        <li>Расширенный соцпакет и ДМС</li>
+        <li>Оплата проезда в отпуск раз в год</li>
+        <li>Реферальная программа</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="vacancy" class="vacancy">
+    <div class="container">
+      <h2>Вакансия: Охранник</h2>
+
+      <div class="vacancy__grid">
+        <div class="vacancy__block">
+          <h3>Требования</h3>
+          <ul>
+            <li>Гражданство Российской Федерации</li>
+            <li>Удостоверение частного охранника (4, 5 или 6 разряда)</li>
+            <li>Медицинская справка по форме 002-ЧО/у</li>
+            <li>Ответственность, внимательность, стрессоустойчивость</li>
+          </ul>
+        </div>
+        <div class="vacancy__block">
+          <h3>Условия</h3>
+          <ul>
+            <li>Сменный график (разные варианты смен)</li>
+            <li>Оборудованные места для отдыха и приёма пищи</li>
+            <li>Оформление строго по ТК РФ</li>
+            <li>Место работы: объекты железнодорожного транспорта</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="benefits" class="benefits">
+    <div class="container">
+      <h2>Что мы предлагаем сотруднику</h2>
+      <div class="benefits__grid">
+        <div class="benefits__item">
+          <h3>ДМС</h3>
+          <p>Добровольное медицинское страхование, в том числе в ведущих клиниках ОАО «РЖД».</p>
+        </div>
+        <div class="benefits__item">
+          <h3>Оплата проезда в отпуск</h3>
+          <p>Раз в год — работнику и ребёнку до 18 лет (ж/д транспортом или компенсация авиабилетов по цене ж/д проезда).</p>
+        </div>
+        <div class="benefits__item">
+          <h3>Санаторно-курортное лечение</h3>
+          <p>Путёвки предоставляются работникам и членам их семьи.</p>
+        </div>
+        <div class="benefits__item">
+          <h3>Материальная помощь</h3>
+          <p>К отпуску и в различных жизненных ситуациях.</p>
+        </div>
+        <div class="benefits__item">
+          <h3>Вознаграждение за преданность компании</h3>
+          <p>Единовременная денежная выплата за стаж работы в Обществе.</p>
+        </div>
+        <div class="benefits__item">
+          <h3>Ежегодная выплата за квалификацию</h3>
+          <p>Разовая выплата за подтверждение квалификации частного охранника.</p>
+        </div>
+        <div class="benefits__item">
+          <h3>Больничные и отпуска</h3>
+          <p>Полная оплата, включая дополнительный отпуск за стаж работы в компании.</p>
+        </div>
+        <div class="benefits__item">
+          <h3>Реферальная программа</h3>
+          <p>Денежное вознаграждение за привлечение новых сотрудников.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="apply" class="apply">
+    <div class="container">
+      <h2>Откликнуться на вакансию</h2>
+      <form class="apply__form" action="#" method="post">
+        <label>
+          ФИО
+          <input type="text" name="name" required>
+        </label>
+        <label>
+          Телефон
+          <input type="tel" name="phone" required>
+        </label>
+        <label>
+          Резюме (по желанию)
+          <input type="file" name="resume">
+        </label>
+        <button type="submit">Отправить отклик</button>
+      </form>
+      <p class="apply__note">
+        Форма пока без обработчика — отправка данных требует настройки
+        backend (email-рассылка или приём заявок в базу).
+      </p>
+    </div>
+  </section>
+
+  <footer id="contacts" class="contacts">
+    <div class="container">
+      <p>ООО «ОП «РЖД-ОХРАНА»</p>
+      <p>г. Москва, ул. Ольховская, д. 11, стр. 1 Б</p>
+      <p>Телефон: <a href="tel:+74956519908">+7 495 651 99 08</a></p>
+      <p>Email: <a href="mailto:mail@rzd-ohrana.ru">mail@rzd-ohrana.ru</a></p>
+      <p>Часы работы: пн–чт 9:00–18:00, пт 9:00–17:45</p>
+    </div>
+  </footer>
+
+</body>
+</html>
