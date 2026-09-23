@@ -378,6 +378,41 @@ body {
   color: var(--rzd-grey-dark);
 }
 
+/* Политика обработки персональных данных */
+.policy {
+  padding: 48px 0 64px;
+}
+
+.policy__body {
+  max-width: 760px;
+}
+
+.policy h1 {
+  font-size: 26px;
+  margin: 0 0 20px;
+}
+
+.policy h2 {
+  font-size: 18px;
+  color: var(--rzd-red);
+  margin: 28px 0 8px;
+}
+
+.policy p,
+.policy li {
+  line-height: 1.6;
+  color: var(--rzd-dark);
+}
+
+.policy__draft-note {
+  margin-top: 32px;
+  padding: 12px 16px;
+  background: var(--rzd-grey);
+  border-radius: var(--rzd-radius);
+  font-size: 13px;
+  color: var(--rzd-grey-dark);
+}
+
 /* Контакты */
 .contacts {
   background: var(--rzd-dark);
