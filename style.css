@@ -1,9 +1,10 @@
 :root {
-  --rzd-red: #d40e14;
-  --rzd-dark: #1f1f1f;
+  --rzd-red: #ee3524;
+  --rzd-dark: #333333;
   --rzd-grey: #f2f2f2;
   --rzd-grey-dark: #6b6b6b;
   --rzd-white: #ffffff;
+  --rzd-radius: 10px;
 }
 
 * {
@@ -150,6 +151,53 @@ body {
   }
 }
 
+/* Что мы предлагаем */
+.benefits {
+  padding: 56px 0;
+}
+
+.benefits h2 {
+  font-size: 26px;
+  margin: 0 0 24px;
+}
+
+.benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.benefits__item {
+  padding: 20px;
+  background: var(--rzd-grey);
+  border-radius: var(--rzd-radius);
+}
+
+.benefits__item h3 {
+  color: var(--rzd-red);
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+.benefits__item p {
+  font-size: 14px;
+  color: var(--rzd-grey-dark);
+  line-height: 1.5;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .benefits__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .benefits__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Форма отклика */
 .apply {
   background: var(--rzd-grey);
@@ -190,7 +238,7 @@ body {
   background: var(--rzd-red);
   color: var(--rzd-white);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--rzd-radius);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
