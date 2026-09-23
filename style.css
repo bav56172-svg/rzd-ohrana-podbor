@@ -85,11 +85,32 @@ body {
   color: var(--rzd-red);
 }
 
+.header__actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .header__phone {
   color: var(--rzd-red);
   font-weight: 600;
   text-decoration: none;
   white-space: nowrap;
+}
+
+.header__max-btn {
+  background: var(--rzd-red);
+  color: var(--rzd-white);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: var(--rzd-radius);
+  white-space: nowrap;
+}
+
+.header__max-btn:hover {
+  background: #b30c11;
 }
 
 /* О компании */
@@ -198,6 +219,59 @@ body {
 @media (max-width: 640px) {
   .vacancy__grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Переход в MAX */
+.max-cta {
+  margin-top: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  background: var(--rzd-dark);
+  color: var(--rzd-white);
+  border-radius: var(--rzd-radius);
+  padding: 24px 28px;
+}
+
+.max-cta__text h3 {
+  margin: 0 0 6px;
+  font-size: 18px;
+}
+
+.max-cta__text p {
+  margin: 0;
+  font-size: 14px;
+  color: #cfcfcf;
+}
+
+.max-cta__button {
+  flex-shrink: 0;
+  padding: 14px 28px;
+  background: var(--rzd-red);
+  color: var(--rzd-white);
+  text-decoration: none;
+  border-radius: var(--rzd-radius);
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.max-cta__button:hover {
+  background: #b30c11;
+}
+
+@media (max-width: 600px) {
+  .max-cta {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .max-cta__button {
+    text-align: center;
   }
 }
 
