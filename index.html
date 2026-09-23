@@ -84,37 +84,7 @@
         <img src="assets/vacancy-guard-portrait.jpg" alt="Охранник ООО «ОП «РЖД-ОХРАНА»" class="vacancy__photo">
       </div>
 
-      <div class="max-cta" id="max-cta">
-        <div class="max-cta__text">
-          <h3>Пройти тестирование кандидата</h3>
-          <p>Короткий тест в мессенджере MAX — 5-10 минут, прямо с телефона.</p>
-        </div>
-
-        <form class="max-cta__form" id="max-cta-form">
-          <label>
-            ФИО
-            <input type="text" name="max_name" id="max_name" required>
-          </label>
-          <label>
-            Телефон
-            <input type="tel" name="max_phone" id="max_phone" required>
-          </label>
-
-          <label class="consent">
-            <input type="checkbox" id="max_consent" required>
-            <span>
-              Даю согласие на
-              <a href="privacy-policy.html" target="_blank" rel="noopener">обработку персональных данных</a>
-              в соответствии с 152-ФЗ
-            </span>
-          </label>
-
-          <button type="button" id="max_go_btn" class="max-cta__button" disabled>
-            <img src="assets/max-icon.png" alt="" class="max-cta__button-icon">
-            Перейти к тестированию
-          </button>
-        </form>
-      </div>
+      <a href="#apply" class="vacancy__apply-link">Откликнуться и пройти тестирование ↓</a>
     </div>
   </section>
 
@@ -159,39 +129,44 @@
     </div>
   </section>
 
-  <!-- Форма отклика -->
+  <!-- Форма отклика + переход к тестированию -->
   <section id="apply" class="apply">
     <div class="container">
       <h2>Откликнуться на вакансию</h2>
-      <form class="apply__form" id="apply-form" action="#" method="post">
+      <p class="apply__lead">
+        Заполните ФИО и телефон — после подтверждения перейдёте в MAX,
+        где сможете пройти короткий тест кандидата (5-10 минут).
+      </p>
+
+      <form class="apply__form" id="apply-form">
         <label>
           ФИО
-          <input type="text" name="name" required>
+          <input type="text" name="name" id="apply_name" required>
         </label>
         <label>
           Телефон
-          <input type="tel" name="phone" required>
+          <input type="tel" name="phone" id="apply_phone" required>
         </label>
-        <label>
-          Резюме (по желанию)
-          <input type="file" name="resume">
-        </label>
+
+        <div class="apply__policy-brief">
+          <p>
+            <strong>Кратко о защите данных:</strong> ваши ФИО и телефон
+            используются только для рассмотрения кандидатуры на вакансию
+            «Охранник» и связи с вами. Не передаются третьим лицам.
+            <a href="privacy-policy.html" target="_blank" rel="noopener">Полный текст политики</a>.
+          </p>
+        </div>
 
         <label class="consent">
           <input type="checkbox" id="apply_consent" required>
-          <span>
-            Даю согласие на
-            <a href="privacy-policy.html" target="_blank" rel="noopener">обработку персональных данных</a>
-            в соответствии с 152-ФЗ
-          </span>
+          <span>Даю согласие на обработку персональных данных в соответствии с 152-ФЗ</span>
         </label>
 
-        <button type="submit" id="apply_submit_btn" disabled>Отправить отклик</button>
+        <button type="button" id="apply_submit_btn" class="apply__submit" disabled>
+          <img src="assets/max-icon.png" alt="" class="apply__submit-icon">
+          Подтвердить и перейти в MAX
+        </button>
       </form>
-      <p class="apply__note">
-        Форма пока без обработчика — отправка данных требует настройки
-        backend (email-рассылка или приём заявок в базу).
-      </p>
     </div>
   </section>
 
@@ -207,28 +182,32 @@
   </footer>
 
   <script>
-    // Кнопка "Перейти к тестированию" в MAX — неактивна без согласия на 152-ФЗ
-    var maxConsent = document.getElementById('max_consent');
-    var maxGoBtn = document.getElementById('max_go_btn');
-    var MAX_BOT_URL = 'https://max.ru/rzd_ohrana_test_bot';
+    // Единая форма отклика: кнопка "Подтвердить и перейти в MAX" неактивна,
+    // пока не отмечено согласие на обработку персональных данных (152-ФЗ).
+    var MAX_BOT_USERNAME = 'rzd_ohrana_test_bot'; // заменить, когда бот будет создан
 
-    if (maxConsent && maxGoBtn) {
-      maxConsent.addEventListener('change', function () {
-        maxGoBtn.disabled = !maxConsent.checked;
-      });
-      maxGoBtn.addEventListener('click', function () {
-        if (!maxConsent.checked) return;
-        window.open(MAX_BOT_URL, '_blank', 'noopener');
-      });
-    }
-
-    // Кнопка "Отправить отклик" — неактивна без согласия на 152-ФЗ
     var applyConsent = document.getElementById('apply_consent');
     var applySubmitBtn = document.getElementById('apply_submit_btn');
+    var applyName = document.getElementById('apply_name');
+    var applyPhone = document.getElementById('apply_phone');
 
     if (applyConsent && applySubmitBtn) {
       applyConsent.addEventListener('change', function () {
         applySubmitBtn.disabled = !applyConsent.checked;
+      });
+
+      applySubmitBtn.addEventListener('click', function () {
+        if (!applyConsent.checked || !applyName.value || !applyPhone.value) return;
+
+        // ФИО и телефон передаются в start-параметре ссылки на бота, чтобы
+        // бот мог поприветствовать кандидата по имени и не спрашивать номер
+        // повторно (если MAX-бот их не примет — просто спросит их сам).
+        var payload = encodeURIComponent(JSON.stringify({
+          name: applyName.value,
+          phone: applyPhone.value,
+        }));
+        var url = 'https://max.ru/' + MAX_BOT_USERNAME + '?start=' + payload;
+        window.open(url, '_blank', 'noopener');
       });
     }
   </script>

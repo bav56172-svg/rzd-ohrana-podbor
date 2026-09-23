@@ -224,63 +224,27 @@ body {
   }
 }
 
-/* Переход в MAX */
-.max-cta {
-  margin-top: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  flex-wrap: wrap;
-  background: var(--rzd-dark);
-  color: var(--rzd-white);
-  border-radius: var(--rzd-radius);
-  padding: 24px 28px;
+/* Переход к отклику из блока вакансии */
+.vacancy__apply-link {
+  display: inline-block;
+  margin-top: 24px;
+  color: var(--rzd-red);
+  font-weight: 600;
+  text-decoration: none;
 }
 
-.max-cta__text h3 {
-  margin: 0 0 6px;
-  font-size: 18px;
+.vacancy__apply-link:hover {
+  text-decoration: underline;
 }
 
-.max-cta__text p {
-  margin: 0;
-  font-size: 14px;
-  color: #cfcfcf;
-}
-
-.max-cta__form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-width: 280px;
-}
-
-.max-cta__form label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
-  color: #cfcfcf;
-}
-
-.max-cta__form input[type="text"],
-.max-cta__form input[type="tel"] {
-  padding: 9px 12px;
-  border: 1px solid #555;
-  border-radius: 6px;
-  background: var(--rzd-white);
-  color: var(--rzd-dark);
-  font-size: 14px;
-  font-family: inherit;
-}
-
+/* Согласие на обработку персональных данных */
 .consent {
   flex-direction: row !important;
   align-items: flex-start;
   gap: 8px !important;
-  font-size: 12px !important;
+  font-size: 13px !important;
   line-height: 1.4;
+  color: var(--rzd-grey-dark) !important;
 }
 
 .consent input[type="checkbox"] {
@@ -292,52 +256,6 @@ body {
 
 .consent a {
   color: var(--rzd-red);
-}
-
-.apply__form .consent a {
-  color: var(--rzd-red);
-}
-
-.max-cta__button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-shrink: 0;
-  padding: 14px 28px;
-  background: var(--rzd-red);
-  color: var(--rzd-white);
-  border: none;
-  text-decoration: none;
-  border-radius: var(--rzd-radius);
-  font-weight: 600;
-  font-size: 15px;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.max-cta__button-icon {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-}
-
-.max-cta__button:hover:not(:disabled) {
-  background: #b30c11;
-}
-
-.max-cta__button:disabled {
-  background: #6b6b6b;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-@media (max-width: 600px) {
-  .max-cta {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: left;
-  }
 }
 
 /* Что мы предлагаем */
@@ -398,11 +316,48 @@ body {
   margin: 0 0 24px;
 }
 
+.apply__lead {
+  max-width: 560px;
+  color: var(--rzd-grey-dark);
+  line-height: 1.5;
+  margin: 0 0 28px;
+}
+
 .apply__form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  max-width: 420px;
+  max-width: 460px;
+}
+
+.apply__policy-brief {
+  padding: 14px 16px;
+  background: var(--rzd-white);
+  border-radius: var(--rzd-radius);
+  font-size: 13px;
+  color: var(--rzd-grey-dark);
+  line-height: 1.5;
+}
+
+.apply__policy-brief p {
+  margin: 0;
+}
+
+.apply__policy-brief a {
+  color: var(--rzd-red);
+}
+
+.apply__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.apply__submit-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
 }
 
 .apply__form label {
