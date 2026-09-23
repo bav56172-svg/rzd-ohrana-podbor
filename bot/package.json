@@ -8,6 +8,8 @@
     "start": "node bot.js"
   },
   "dependencies": {
-    "@maxhub/max-bot-api": "^0.3.1"
+    "@maxhub/max-bot-api": "^0.3.1",
+    "exceljs": "^4.4.0",
+    "nodemailer": "^6.9.14"
   }
 }
