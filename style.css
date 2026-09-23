@@ -149,3 +149,75 @@ body {
     grid-template-columns: 1fr;
   }
 }
+
+/* Форма отклика */
+.apply {
+  background: var(--rzd-grey);
+  padding: 56px 0;
+}
+
+.apply h2 {
+  font-size: 26px;
+  margin: 0 0 24px;
+}
+
+.apply__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 420px;
+}
+
+.apply__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  color: var(--rzd-grey-dark);
+}
+
+.apply__form input {
+  padding: 10px 12px;
+  border: 1px solid #cfcfcf;
+  border-radius: 4px;
+  font-size: 15px;
+  font-family: inherit;
+}
+
+.apply__form button {
+  align-self: flex-start;
+  padding: 12px 28px;
+  background: var(--rzd-red);
+  color: var(--rzd-white);
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.apply__form button:hover {
+  background: #b30c11;
+}
+
+.apply__note {
+  margin-top: 16px;
+  font-size: 13px;
+  color: var(--rzd-grey-dark);
+}
+
+/* Контакты */
+.contacts {
+  background: var(--rzd-dark);
+  color: var(--rzd-white);
+  padding: 32px 0;
+}
+
+.contacts p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.contacts a {
+  color: var(--rzd-white);
+}
