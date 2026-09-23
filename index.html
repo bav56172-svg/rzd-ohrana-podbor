@@ -27,7 +27,9 @@
       </nav>
       <div class="header__actions">
         <a href="tel:+74956519908" class="header__phone">+7 495 651 99 08</a>
-        <a href="https://max.ru/rzd_ohrana_test_bot" class="header__max-btn" target="_blank" rel="noopener">Тест в MAX</a>
+        <a href="#vacancy" class="header__max-btn" aria-label="Тестирование в MAX">
+          <img src="assets/max-icon.png" alt="MAX" class="header__max-icon">
+        </a>
       </div>
     </div>
   </header>
@@ -82,14 +84,36 @@
         <img src="assets/vacancy-guard-portrait.jpg" alt="Охранник ООО «ОП «РЖД-ОХРАНА»" class="vacancy__photo">
       </div>
 
-      <div class="max-cta">
+      <div class="max-cta" id="max-cta">
         <div class="max-cta__text">
           <h3>Пройти тестирование кандидата</h3>
           <p>Короткий тест в мессенджере MAX — 5-10 минут, прямо с телефона.</p>
         </div>
-        <a href="https://max.ru/rzd_ohrana_test_bot" class="max-cta__button" target="_blank" rel="noopener">
-          Перейти в MAX и пройти тест
-        </a>
+
+        <form class="max-cta__form" id="max-cta-form">
+          <label>
+            ФИО
+            <input type="text" name="max_name" id="max_name" required>
+          </label>
+          <label>
+            Телефон
+            <input type="tel" name="max_phone" id="max_phone" required>
+          </label>
+
+          <label class="consent">
+            <input type="checkbox" id="max_consent" required>
+            <span>
+              Даю согласие на
+              <a href="privacy-policy.html" target="_blank" rel="noopener">обработку персональных данных</a>
+              в соответствии с 152-ФЗ
+            </span>
+          </label>
+
+          <button type="button" id="max_go_btn" class="max-cta__button" disabled>
+            <img src="assets/max-icon.png" alt="" class="max-cta__button-icon">
+            Перейти к тестированию
+          </button>
+        </form>
       </div>
     </div>
   </section>
@@ -139,7 +163,7 @@
   <section id="apply" class="apply">
     <div class="container">
       <h2>Откликнуться на вакансию</h2>
-      <form class="apply__form" action="#" method="post">
+      <form class="apply__form" id="apply-form" action="#" method="post">
         <label>
           ФИО
           <input type="text" name="name" required>
@@ -152,7 +176,17 @@
           Резюме (по желанию)
           <input type="file" name="resume">
         </label>
-        <button type="submit">Отправить отклик</button>
+
+        <label class="consent">
+          <input type="checkbox" id="apply_consent" required>
+          <span>
+            Даю согласие на
+            <a href="privacy-policy.html" target="_blank" rel="noopener">обработку персональных данных</a>
+            в соответствии с 152-ФЗ
+          </span>
+        </label>
+
+        <button type="submit" id="apply_submit_btn" disabled>Отправить отклик</button>
       </form>
       <p class="apply__note">
         Форма пока без обработчика — отправка данных требует настройки
@@ -171,6 +205,33 @@
       <p>Часы работы: пн–чт 9:00–18:00, пт 9:00–17:45</p>
     </div>
   </footer>
+
+  <script>
+    // Кнопка "Перейти к тестированию" в MAX — неактивна без согласия на 152-ФЗ
+    var maxConsent = document.getElementById('max_consent');
+    var maxGoBtn = document.getElementById('max_go_btn');
+    var MAX_BOT_URL = 'https://max.ru/rzd_ohrana_test_bot';
+
+    if (maxConsent && maxGoBtn) {
+      maxConsent.addEventListener('change', function () {
+        maxGoBtn.disabled = !maxConsent.checked;
+      });
+      maxGoBtn.addEventListener('click', function () {
+        if (!maxConsent.checked) return;
+        window.open(MAX_BOT_URL, '_blank', 'noopener');
+      });
+    }
+
+    // Кнопка "Отправить отклик" — неактивна без согласия на 152-ФЗ
+    var applyConsent = document.getElementById('apply_consent');
+    var applySubmitBtn = document.getElementById('apply_submit_btn');
+
+    if (applyConsent && applySubmitBtn) {
+      applyConsent.addEventListener('change', function () {
+        applySubmitBtn.disabled = !applyConsent.checked;
+      });
+    }
+  </script>
 
 </body>
 </html>
