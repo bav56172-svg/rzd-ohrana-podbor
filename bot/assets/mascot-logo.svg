@@ -1,0 +1,45 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3AB0FF"/>
+      <stop offset="100%" stop-color="#2E8BFF"/>
+    </linearGradient>
+    <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD84D"/>
+      <stop offset="100%" stop-color="#FFB800"/>
+    </linearGradient>
+  </defs>
+
+  <!-- фон -->
+  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+
+  <!-- щит на груди (позади персонажа) -->
+  <path d="M256 300 L330 320 C330 380 300 420 256 440 C212 420 182 380 182 320 Z"
+        fill="url(#shield)" stroke="#E39A00" stroke-width="4"/>
+  <path d="M256 320 L256 400 M232 350 L280 350" stroke="#E39A00" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- тело -->
+  <rect x="176" y="270" width="160" height="110" rx="40" fill="#2A3B55"/>
+
+  <!-- голова -->
+  <circle cx="256" cy="210" r="88" fill="#FFD6A8"/>
+
+  <!-- фуражка (козырёк выше линии глаз, не перекрывает лицо) -->
+  <path d="M170 178 C170 112 342 112 342 178 L342 186 L170 186 Z" fill="#2A3B55"/>
+  <rect x="156" y="182" width="200" height="18" rx="9" fill="#1C2A3F"/>
+  <circle cx="256" cy="150" r="16" fill="#FFD84D" stroke="#E39A00" stroke-width="3"/>
+
+  <!-- улыбающееся лицо -->
+  <circle cx="222" cy="220" r="9" fill="#2A3B55"/>
+  <circle cx="290" cy="220" r="9" fill="#2A3B55"/>
+  <path d="M212 248 Q256 288 300 248" stroke="#2A3B55" stroke-width="10" fill="none" stroke-linecap="round"/>
+
+  <!-- румянец -->
+  <circle cx="196" cy="236" r="12" fill="#FF9E9E" opacity="0.7"/>
+  <circle cx="316" cy="236" r="12" fill="#FF9E9E" opacity="0.7"/>
+
+  <!-- поднятая рука с большим пальцем вверх -->
+  <path d="M336 300 C366 290 384 300 384 326 C384 348 366 356 348 350"
+        fill="#FFD6A8" stroke="#FFD6A8"/>
+  <circle cx="380" cy="316" r="20" fill="#FFD6A8"/>
+</svg>
