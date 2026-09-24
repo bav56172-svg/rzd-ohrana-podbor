@@ -1,45 +1,94 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#3AB0FF"/>
-      <stop offset="100%" stop-color="#2E8BFF"/>
+      <stop offset="0%" stop-color="#3B4656"/>
+      <stop offset="100%" stop-color="#232B36"/>
     </linearGradient>
-    <linearGradient id="shield" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFD84D"/>
-      <stop offset="100%" stop-color="#FFB800"/>
+    <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F4C69B"/>
+      <stop offset="100%" stop-color="#E3A876"/>
     </linearGradient>
+    <linearGradient id="cap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A4658"/>
+      <stop offset="100%" stop-color="#20293A"/>
+    </linearGradient>
+    <linearGradient id="jacket" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3A4658"/>
+      <stop offset="100%" stop-color="#1E2633"/>
+    </linearGradient>
+    <linearGradient id="vest" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFD23F"/>
+      <stop offset="100%" stop-color="#F5A623"/>
+    </linearGradient>
+    <radialGradient id="facelight" cx="35%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
   <!-- фон -->
-  <rect width="512" height="512" rx="96" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="80" fill="url(#bg)"/>
 
-  <!-- щит на груди (позади персонажа) -->
-  <path d="M256 300 L330 320 C330 380 300 420 256 440 C212 420 182 380 182 320 Z"
-        fill="url(#shield)" stroke="#E39A00" stroke-width="4"/>
-  <path d="M256 320 L256 400 M232 350 L280 350" stroke="#E39A00" stroke-width="8" stroke-linecap="round"/>
+  <!-- тень под персонажем для объёма -->
+  <ellipse cx="256" cy="470" rx="140" ry="18" fill="#000000" opacity="0.25"/>
 
-  <!-- тело -->
-  <rect x="176" y="270" width="160" height="110" rx="40" fill="#2A3B55"/>
+  <!-- плечи/жилет (сигнальный, светоотражающие полосы) -->
+  <path d="M140 460 C140 360 170 300 256 300 C342 300 372 360 372 460 Z" fill="url(#vest)"/>
+  <rect x="140" y="392" width="232" height="20" fill="#EFEFEF" opacity="0.85"/>
+  <rect x="140" y="430" width="232" height="20" fill="#EFEFEF" opacity="0.85"/>
 
-  <!-- голова -->
-  <circle cx="256" cy="210" r="88" fill="#FFD6A8"/>
+  <!-- куртка форменная под жилетом (видна по бокам и у горловины) -->
+  <path d="M150 460 C150 372 178 312 256 312 C334 312 362 372 362 460
+           L338 460 C338 388 316 336 256 336 C196 336 174 388 174 460 Z" fill="url(#jacket)"/>
 
-  <!-- фуражка (козырёк выше линии глаз, не перекрывает лицо) -->
-  <path d="M170 178 C170 112 342 112 342 178 L342 186 L170 186 Z" fill="#2A3B55"/>
-  <rect x="156" y="182" width="200" height="18" rx="9" fill="#1C2A3F"/>
-  <circle cx="256" cy="150" r="16" fill="#FFD84D" stroke="#E39A00" stroke-width="3"/>
+  <!-- воротник -->
+  <path d="M226 320 L256 356 L286 320 L270 308 L256 320 L242 308 Z" fill="#161D28"/>
 
-  <!-- улыбающееся лицо -->
-  <circle cx="222" cy="220" r="9" fill="#2A3B55"/>
-  <circle cx="290" cy="220" r="9" fill="#2A3B55"/>
-  <path d="M212 248 Q256 288 300 248" stroke="#2A3B55" stroke-width="10" fill="none" stroke-linecap="round"/>
+  <!-- бейдж со щитом + логотип РЖД (тот же файл, что и на сайте/шапке) -->
+  <path d="M256 356 L292 367 C292 400 277 421 256 432 C235 421 220 400 220 367 Z"
+        fill="#F4F4F4" stroke="#B8241A" stroke-width="2"/>
+  <g transform="translate(222,378) scale(0.62)">
+    <path fill="#EE3524" d="M75.952.972C76.9.03 78.095.03 79.042.03h9.879c3.564 0 8.925 0 12.487 3.551 3.567 3.551 3.567 8.764 3.567 10.66v5.69c0 1.899 0 7.112-3.567 10.67-3.562 3.55-8.923 3.55-12.487 3.55h-6.189c-3.096 0-5.355 0-7.261-.942-1.9-.95-3.335-2.85-4.75-4.743l-1.436-1.893c-1.019-1.345-1.78-2.373-1.78-3.796 0-1.42.83-2.518 1.78-3.787l5.702-7.582h14.29l-9.282 12.316c-.717.949-1.547 2.134-.953 3.435.594 1.307 2.142 1.307 3.332 1.307h6.902c.947 0 2.378 0 3.329-.95.95-.943.95-2.373.95-3.316V9.98c0-.953 0-2.376-.95-3.32-.95-.956-2.382-.956-3.329-.956h-14.29V4.053zM56.657 11.407h14.27l-17.126 22.75H39.53zM-.017 15.425c0-.943 0-2.131.95-3.081.95-.937 2.14-.937 3.096-.937h23.904c3.092 0 5.358 0 7.255.937 1.907.95 3.335 2.85 4.77 4.743l1.419 1.902c1.01 1.342 1.786 2.366 1.786 3.787 0 1.423-.827 2.523-1.786 3.796l-5.71 7.585H21.388L30.67 21.83c.717-.944 1.548-2.128.957-3.438-.602-1.304-2.146-1.304-3.341-1.304H17.11v28.442H5.693V17.087h-5.71z"/>
+  </g>
 
-  <!-- румянец -->
-  <circle cx="196" cy="236" r="12" fill="#FF9E9E" opacity="0.7"/>
-  <circle cx="316" cy="236" r="12" fill="#FF9E9E" opacity="0.7"/>
+  <!-- шея -->
+  <rect x="234" y="270" width="44" height="46" fill="url(#skin)"/>
 
-  <!-- поднятая рука с большим пальцем вверх -->
-  <path d="M336 300 C366 290 384 300 384 326 C384 348 366 356 348 350"
-        fill="#FFD6A8" stroke="#FFD6A8"/>
-  <circle cx="380" cy="316" r="20" fill="#FFD6A8"/>
+  <!-- голова (взрослые пропорции) -->
+  <ellipse cx="256" cy="212" rx="76" ry="82" fill="url(#skin)"/>
+  <ellipse cx="256" cy="212" rx="76" ry="82" fill="url(#facelight)"/>
+
+  <!-- уши -->
+  <ellipse cx="182" cy="220" rx="10" ry="16" fill="url(#skin)"/>
+  <ellipse cx="330" cy="220" rx="10" ry="16" fill="url(#skin)"/>
+
+  <!-- брови -->
+  <path d="M212 196 Q228 186 246 194" stroke="#5A3A22" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <path d="M266 194 Q284 186 300 196" stroke="#5A3A22" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+  <!-- глаза (спокойный уверенный взгляд) -->
+  <ellipse cx="228" cy="214" rx="7" ry="9" fill="#2A3B55"/>
+  <ellipse cx="284" cy="214" rx="7" ry="9" fill="#2A3B55"/>
+  <circle cx="230" cy="211" r="2" fill="#FFFFFF"/>
+  <circle cx="286" cy="211" r="2" fill="#FFFFFF"/>
+
+  <!-- нос -->
+  <path d="M254 220 Q250 236 258 240" stroke="#C98F5E" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+  <!-- лёгкая уверенная улыбка -->
+  <path d="M226 252 Q256 270 286 252" stroke="#8A4B2E" stroke-width="5" fill="none" stroke-linecap="round"/>
+
+  <!-- фуражка форменная -->
+  <path d="M168 190 C168 118 344 118 344 190 L344 196 L168 196 Z" fill="url(#cap)"/>
+  <rect x="152" y="192" width="208" height="20" rx="4" fill="#141B27"/>
+  <!-- кокарда: красный ромб на золотой окантовке (фирменный акцент) -->
+  <ellipse cx="256" cy="156" rx="17" ry="17" fill="#D9A441" stroke="#B8811F" stroke-width="2"/>
+  <rect x="248" y="148" width="16" height="16" fill="#EE3524" transform="rotate(45 256 156)"/>
+
+  <!-- рука согнута у груди, держит рацию (как на фото с офиц. сайта) -->
+  <path d="M338 400 C376 392 396 372 392 340 C390 322 374 314 362 322"
+        fill="none" stroke="url(#jacket)" stroke-width="34" stroke-linecap="round"/>
+  <rect x="368" y="292" width="22" height="54" rx="6" fill="#1A1F27"/>
+  <rect x="374" y="284" width="10" height="14" rx="3" fill="#3A4656"/>
+  <circle cx="404" cy="336" r="18" fill="url(#skin)"/>
 </svg>
