@@ -1,24 +1,24 @@
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#3B4656"/>
-      <stop offset="100%" stop-color="#232B36"/>
+      <stop offset="0%" stop-color="#5A6570"/>
+      <stop offset="100%" stop-color="#333333"/>
     </linearGradient>
     <linearGradient id="skin" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#F4C69B"/>
       <stop offset="100%" stop-color="#E3A876"/>
     </linearGradient>
     <linearGradient id="cap" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3A4658"/>
-      <stop offset="100%" stop-color="#20293A"/>
+      <stop offset="0%" stop-color="#5A6570"/>
+      <stop offset="100%" stop-color="#333333"/>
     </linearGradient>
     <linearGradient id="jacket" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3A4658"/>
-      <stop offset="100%" stop-color="#1E2633"/>
+      <stop offset="0%" stop-color="#6B7785"/>
+      <stop offset="100%" stop-color="#3F4750"/>
     </linearGradient>
     <linearGradient id="vest" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#FFD23F"/>
-      <stop offset="100%" stop-color="#F5A623"/>
+      <stop offset="0%" stop-color="#EE3524"/>
+      <stop offset="100%" stop-color="#B8241A"/>
     </linearGradient>
     <radialGradient id="facelight" cx="35%" cy="30%" r="70%">
       <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.25"/>
@@ -34,15 +34,15 @@
 
   <!-- плечи/жилет (сигнальный, светоотражающие полосы) -->
   <path d="M140 460 C140 360 170 300 256 300 C342 300 372 360 372 460 Z" fill="url(#vest)"/>
-  <rect x="140" y="392" width="232" height="20" fill="#EFEFEF" opacity="0.85"/>
-  <rect x="140" y="430" width="232" height="20" fill="#EFEFEF" opacity="0.85"/>
+  <rect x="140" y="392" width="232" height="20" fill="#C7CDD3" opacity="0.9"/>
+  <rect x="140" y="430" width="232" height="20" fill="#C7CDD3" opacity="0.9"/>
 
   <!-- куртка форменная под жилетом (видна по бокам и у горловины) -->
   <path d="M150 460 C150 372 178 312 256 312 C334 312 362 372 362 460
            L338 460 C338 388 316 336 256 336 C196 336 174 388 174 460 Z" fill="url(#jacket)"/>
 
   <!-- воротник -->
-  <path d="M226 320 L256 356 L286 320 L270 308 L256 320 L242 308 Z" fill="#161D28"/>
+  <path d="M226 320 L256 356 L286 320 L270 308 L256 320 L242 308 Z" fill="#262B30"/>
 
   <!-- бейдж со щитом + логотип РЖД (тот же файл, что и на сайте/шапке) -->
   <path d="M256 356 L292 367 C292 400 277 421 256 432 C235 421 220 400 220 367 Z"
@@ -81,14 +81,14 @@
   <!-- фуражка форменная -->
   <path d="M168 190 C168 118 344 118 344 190 L344 196 L168 196 Z" fill="url(#cap)"/>
   <rect x="152" y="192" width="208" height="20" rx="4" fill="#141B27"/>
-  <!-- кокарда: красный ромб на золотой окантовке (фирменный акцент) -->
-  <ellipse cx="256" cy="156" rx="17" ry="17" fill="#D9A441" stroke="#B8811F" stroke-width="2"/>
+  <!-- кокарда: красный ромб на стальной окантовке (фирменный акцент) -->
+  <ellipse cx="256" cy="156" rx="17" ry="17" fill="#C7CDD3" stroke="#8A939C" stroke-width="2"/>
   <rect x="248" y="148" width="16" height="16" fill="#EE3524" transform="rotate(45 256 156)"/>
 
   <!-- рука согнута у груди, держит рацию (как на фото с офиц. сайта) -->
   <path d="M338 400 C376 392 396 372 392 340 C390 322 374 314 362 322"
         fill="none" stroke="url(#jacket)" stroke-width="34" stroke-linecap="round"/>
-  <rect x="368" y="292" width="22" height="54" rx="6" fill="#1A1F27"/>
-  <rect x="374" y="284" width="10" height="14" rx="3" fill="#3A4656"/>
+  <rect x="368" y="292" width="22" height="54" rx="6" fill="#262B30"/>
+  <rect x="374" y="284" width="10" height="14" rx="3" fill="#6B7785"/>
   <circle cx="404" cy="336" r="18" fill="url(#skin)"/>
 </svg>
