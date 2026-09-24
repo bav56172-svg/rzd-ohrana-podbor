@@ -136,6 +136,10 @@ body {
   margin: 0 0 16px;
 }
 
+.nowrap {
+  white-space: nowrap;
+}
+
 .about__lead {
   color: var(--rzd-grey-dark);
   line-height: 1.5;
