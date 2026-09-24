@@ -20,17 +20,15 @@ bot.api.setMyCommands([
 bot.use(session());
 bot.use(scenarios.controllerMiddleware());
 
-// Ссылка с сайта: https://max.ru/<bot>?start=<encodeURIComponent(JSON)>
-// с ФИО и телефоном — чтобы бот не спрашивал их повторно.
-// ПРЕДПОЛОЖЕНИЕ (не проверено на живом боте): MAX передаёт start-параметр
-// как текст после команды /start, по аналогии с Telegram. Проверить, когда
-// появится токен и можно будет реально потестировать.
-function parseStartPayload(ctx) {
-  const text = ctx.message?.body?.text || "";
-  const payload = text.replace(/^\/start\s*/, "").trim();
-  if (!payload) return null;
+// Ссылка с сайта: https://max.ru/<bot>?start=<encodeURIComponent(JSON)> с
+// ФИО и телефоном — чтобы бот не спрашивал их повторно. MAX присылает это
+// как отдельное событие update_type "bot_started" с полем payload —
+// прочитано в исходнике SDK (dist/core/context.js, getStartPayload),
+// а не угадано по аналогии с другими мессенджерами.
+function parseStartPayload(raw) {
+  if (!raw) return null;
   try {
-    const decoded = JSON.parse(decodeURIComponent(payload));
+    const decoded = JSON.parse(decodeURIComponent(raw));
     if (decoded.name && decoded.phone) {
       return { fio: decoded.name, phone: decoded.phone };
     }
@@ -40,14 +38,30 @@ function parseStartPayload(ctx) {
   return null;
 }
 
-bot.command("start", async (ctx) => {
-  const prefill = parseStartPayload(ctx);
-  // ПРЕДПОЛОЖЕНИЕ: scenarios.start() принимает вторым аргументом начальные
-  // данные сценария (переопределяет createData). Если SDK так не умеет —
-  // не страшно: prefill просто не подставится, бот спросит ФИО/телефон
-  // сам в диалоге (штатное поведение). Проверить на живом боте.
-  return scenarios.start(candidateTest, prefill || {})(ctx);
+// scenarios.start(definition, createData) — второй аргумент обязан быть
+// функцией (ctx) => data; если передать данные — они ПОЛНОСТЬЮ заменяют
+// createData сценария, а не мержатся с ним. Поэтому собираем полный объект
+// вручную, с теми же полями, что в candidateTest.createData(). Проверено
+// чтением исходника @maxhub/max-bot-api (dist/scenario/engine.js).
+function beginTest(prefill) {
+  return scenarios.start(candidateTest, () => ({
+    fio: null,
+    phone: null,
+    grade: null,
+    answers: {},
+    score: 0,
+    ...(prefill || {}),
+  }));
+}
+
+// Открытие бота по ссылке с сайта (с данными) — событие bot_started
+bot.on("bot_started", async (ctx) => {
+  const prefill = parseStartPayload(ctx.startPayload);
+  return beginTest(prefill)(ctx);
 });
+
+// Ручной запуск командой /start (без ссылки — данных с сайта нет)
+bot.command("start", beginTest(null));
 
 bot.command("cancel", async (ctx) => {
   const canceled = ctx.scenario.cancel();
@@ -55,7 +69,7 @@ bot.command("cancel", async (ctx) => {
 });
 
 bot.use(scenarios.interceptMiddleware());
-bot.command("test", scenarios.start(candidateTest));
+bot.command("test", beginTest(null));
 
 bot.start();
 console.log("Бот запущен.");
