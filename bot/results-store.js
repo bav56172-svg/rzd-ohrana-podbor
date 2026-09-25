@@ -8,10 +8,9 @@ const HEADERS = [
   "ФИО",
   "Телефон",
   "Разряд",
-  "Баллы",
-  "Из максимума",
-  "Процент",
-  "Прошёл тест",
+  "Тест 1 (квалификация)",
+  "Тест 2 (психология)",
+  "Итоговый результат",
 ];
 
 async function loadOrCreateWorkbook() {
@@ -26,18 +25,23 @@ async function loadOrCreateWorkbook() {
   return { workbook, sheet };
 }
 
-// record: { fio, phone, grade, score, maxScore, percent, passed }
+function formatTestCell(test) {
+  if (!test) return "—";
+  return `${test.score}/${test.maxScore} (${test.percent}%)`;
+}
+
+// record: { fio, phone, grade, rejectReason, test1, test2, finalResult }
+// test1/test2: { score, maxScore, percent, passed } | null
 export async function appendCandidateRow(record) {
   const { workbook, sheet } = await loadOrCreateWorkbook();
   sheet.addRow([
     new Date().toLocaleString("ru-RU"),
     record.fio,
     record.phone,
-    record.grade,
-    record.score,
-    record.maxScore,
-    `${record.percent}%`,
-    record.passed ? "Да" : "Нет",
+    record.grade ?? "—",
+    formatTestCell(record.test1),
+    formatTestCell(record.test2),
+    record.finalResult,
   ]);
   await workbook.xlsx.writeFile(FILE_PATH);
   return FILE_PATH;

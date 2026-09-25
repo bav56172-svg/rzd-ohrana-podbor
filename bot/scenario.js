@@ -1,5 +1,11 @@
 import { defineScenario, transition, Keyboard } from "@maxhub/max-bot-api";
-import { questions, maxScore, gradeQuestion, PASS_THRESHOLD_PERCENT } from "./questions.js";
+import {
+  test1Questions,
+  test2Questions,
+  test1MaxScore,
+  test2MaxScore,
+  PASS_THRESHOLD_PERCENT,
+} from "./questions.js";
 import { appendCandidateRow } from "./results-store.js";
 import { sendCandidatesFile } from "./notify-email.js";
 
@@ -17,7 +23,8 @@ const WELCOME_TEXT =
   "Мы предлагаем: официальное оформление по ТК РФ, расширенный соцпакет и " +
   "ДМС, оплату проезда в отпуск раз в год, санаторно-курортное лечение, " +
   "реферальную программу.\n\n" +
-  "Дальше — короткий тест кандидата (5-10 минут).";
+  "Дальше — два коротких теста кандидата: квалификация и психологическая " +
+  "пригодность (10-15 минут).";
 
 function startTestKeyboard() {
   return Keyboard.inlineKeyboard([[Keyboard.button.callback("Пройти тест", "start-test")]]);
@@ -27,14 +34,21 @@ export const candidateTest = defineScenario()({
   id: "candidate-test",
   initialStep: "welcome",
   idleTimeoutMs: 30 * 60 * 1000,
-  createData: () => ({ fio: null, phone: null, grade: null, answers: {}, score: 0 }),
+  createData: () => ({
+    fio: null,
+    phone: null,
+    grade: null,
+    test1Answers: {},
+    test1Score: 0,
+    test2Answers: {},
+    test2Score: 0,
+  }),
   steps: buildSteps(),
 });
 
 function buildSteps() {
   const steps = {};
 
-  // Приветствие с кратким повтором инфо с сайта + кнопка "Пройти тест"
   steps.welcome = async ({ ctx }) => {
     await ctx.reply(WELCOME_TEXT, { attachments: [startTestKeyboard()] });
     return transition.goto("welcome-wait", {});
@@ -44,9 +58,8 @@ function buildSteps() {
     if (ctx.callback?.payload !== "start-test") {
       return transition.stay();
     }
-    // Если ФИО/телефон уже пришли по ссылке с сайта — не спрашиваем повторно
     if (data.fio && data.phone) {
-      return transition.goto("ask-grade", {});
+      return transition.goto("t1_0", {});
     }
     return transition.goto("ask-fio", {});
   };
@@ -56,7 +69,7 @@ function buildSteps() {
     return transition.goto("ask-fio-wait", {});
   };
 
-  steps["ask-fio-wait"] = async ({ ctx, data }) => {
+  steps["ask-fio-wait"] = async ({ ctx }) => {
     const text = ctx.message?.body?.text?.trim();
     if (!text) {
       await ctx.reply("Пожалуйста, напишите ФИО текстом.");
@@ -70,38 +83,78 @@ function buildSteps() {
     return transition.goto("ask-phone-wait", {});
   };
 
-  steps["ask-phone-wait"] = async ({ ctx, data }) => {
+  steps["ask-phone-wait"] = async ({ ctx }) => {
     const text = ctx.message?.body?.text?.trim();
     if (!text) {
       await ctx.reply("Пожалуйста, напишите номер телефона текстом.");
       return transition.stay();
     }
-    return transition.goto("ask-grade", { phone: text });
+    return transition.goto("t1_0", { phone: text });
   };
 
-  steps["ask-grade"] = async ({ ctx }) => {
-    await ctx.reply(gradeQuestion.text, { attachments: [questionKeyboard(gradeQuestion)] });
-    return transition.goto("ask-grade-wait", {});
-  };
+  buildTestSteps(steps, {
+    questions: test1Questions,
+    prefix: "t1_",
+    testLabel: "Тест 1 из 2 — Квалификация",
+    answersKey: "test1Answers",
+    scoreKey: "test1Score",
+    onFilterFail: "rejected",
+    afterLast: "t1-result",
+  });
 
-  steps["ask-grade-wait"] = async ({ ctx, data }) => {
-    const payload = ctx.callback?.payload;
-    if (!payload || !payload.startsWith(`${gradeQuestion.id}:`)) {
-      await ctx.reply("Пожалуйста, выберите вариант кнопкой выше.");
-      return transition.stay();
+  steps["t1-result"] = async ({ ctx, data }) => {
+    const percent = test1MaxScore > 0 ? Math.round((data.test1Score / test1MaxScore) * 100) : 0;
+    const passed = percent >= PASS_THRESHOLD_PERCENT;
+    if (!passed) {
+      return transition.goto("rejected", {
+        rejectReason: `не набрал проходной балл в Тесте 1 (${percent}%)`,
+      });
     }
-    const grade = payload.slice(gradeQuestion.id.length + 1);
-    return transition.goto("q0", { grade });
+    await ctx.reply("Первый тест пройден. Переходим ко второму — психологическая пригодность.");
+    return transition.goto("t2_0", {});
   };
 
-  // Очковые вопросы теста (психологический профиль/надёжность/внимательность)
+  buildTestSteps(steps, {
+    questions: test2Questions,
+    prefix: "t2_",
+    testLabel: "Тест 2 из 2 — Психологическая пригодность",
+    answersKey: "test2Answers",
+    scoreKey: "test2Score",
+    onFilterFail: null, // тест 2 не отсеивает жёстко, только баллы
+    afterLast: "finish",
+  });
+
+  steps.rejected = async ({ ctx, data }) => {
+    await ctx.reply(
+      "Спасибо за ответы. К сожалению, по результатам теста мы не можем продолжить " +
+        "рассмотрение вашей кандидатуры на данную позицию.",
+    );
+    await saveResult({ data, rejectReason: data.rejectReason });
+    return transition.complete();
+  };
+
+  steps.finish = async ({ ctx, data }) => {
+    await ctx.reply(
+      "Тест пройден, спасибо! Ваши ответы переданы менеджеру по подбору " +
+        "персонала — мы свяжемся с вами по указанному телефону.",
+    );
+    await saveResult({ data, rejectReason: null });
+    return transition.complete();
+  };
+
+  return steps;
+}
+
+// Строит шаги для одного теста: показ вопроса -> ожидание ответа -> следующий.
+// Для type "filter" неверный ответ сразу уводит на onFilterFail.
+function buildTestSteps(steps, { questions, prefix, testLabel, answersKey, scoreKey, onFilterFail, afterLast }) {
   questions.forEach((question, i) => {
-    const stepId = `q${i}`;
-    const nextStepId = i < questions.length - 1 ? `q${i + 1}` : "finish";
+    const stepId = `${prefix}${i}`;
+    const nextStepId = i < questions.length - 1 ? `${prefix}${i + 1}` : afterLast;
 
     steps[stepId] = async ({ ctx }) => {
       await ctx.reply(
-        `Вопрос ${i + 1} из ${questions.length} (${question.block})\n\n${question.text}`,
+        `${testLabel}\nВопрос ${i + 1} из ${questions.length} (${question.block})\n\n${question.text}`,
         { attachments: [questionKeyboard(question)] },
       );
       return transition.goto(`${stepId}-wait`, {});
@@ -115,38 +168,49 @@ function buildSteps() {
       }
       const chosenText = payload.slice(question.id.length + 1);
       const option = question.options.find((o) => o.text === chosenText);
-      const answers = { ...data.answers, [question.id]: chosenText };
-      const score = data.score + (option?.score ?? 0);
-      return transition.goto(nextStepId, { answers, score });
+      const answers = { ...data[answersKey], [question.id]: chosenText };
+
+      if (question.type === "filter" && option?.pass === false && onFilterFail) {
+        return transition.goto(onFilterFail, {
+          [answersKey]: answers,
+          rejectReason: option.rejectReason,
+        });
+      }
+      if (question.id === "t1q2") {
+        // разряд удостоверения фиксируем отдельно для анкеты
+        return transition.goto(nextStepId, { [answersKey]: answers, grade: chosenText });
+      }
+
+      const score = data[scoreKey] + (option?.score ?? 0);
+      return transition.goto(nextStepId, { [answersKey]: answers, [scoreKey]: score });
     };
   });
+}
 
-  steps.finish = async ({ ctx, data }) => {
-    const percent = maxScore > 0 ? Math.round((data.score / maxScore) * 100) : 0;
-    const passed = percent >= PASS_THRESHOLD_PERCENT;
+async function saveResult({ data, rejectReason }) {
+  const test1Percent = test1MaxScore > 0 ? Math.round((data.test1Score / test1MaxScore) * 100) : 0;
+  const test2Percent = test2MaxScore > 0 ? Math.round((data.test2Score / test2MaxScore) * 100) : 0;
 
-    await ctx.reply(
-      "Тест пройден, спасибо! Ваши ответы переданы менеджеру по подбору " +
-        "персонала — мы свяжемся с вами по указанному телефону.",
-    );
+  const test1 = data.test1Answers && Object.keys(data.test1Answers).length
+    ? { score: data.test1Score, maxScore: test1MaxScore, percent: test1Percent }
+    : null;
+  const test2 = data.test2Answers && Object.keys(data.test2Answers).length
+    ? { score: data.test2Score, maxScore: test2MaxScore, percent: test2Percent }
+    : null;
 
-    try {
-      await appendCandidateRow({
-        fio: data.fio,
-        phone: data.phone,
-        grade: data.grade,
-        score: data.score,
-        maxScore,
-        percent,
-        passed,
-      });
-      await sendCandidatesFile();
-    } catch (err) {
-      console.error("Не удалось сохранить/отправить результат кандидата:", err);
-    }
+  const finalResult = rejectReason ? `Отсеян: ${rejectReason}` : "Прошёл оба теста, рекомендован";
 
-    return transition.complete();
-  };
-
-  return steps;
+  try {
+    await appendCandidateRow({
+      fio: data.fio,
+      phone: data.phone,
+      grade: data.grade,
+      test1,
+      test2,
+      finalResult,
+    });
+    await sendCandidatesFile();
+  } catch (err) {
+    console.error("Не удалось сохранить/отправить результат кандидата:", err);
+  }
 }
