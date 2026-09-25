@@ -1,5 +1,5 @@
 import { Bot, session, ScenarioEngine } from "@maxhub/max-bot-api";
-import { candidateTest } from "./scenario.js";
+import { candidateTest, initialCandidateData } from "./scenario.js";
 
 const token = process.env.BOT_TOKEN;
 if (!token) {
@@ -40,18 +40,14 @@ function parseStartPayload(raw) {
 
 // scenarios.start(definition, createData) — второй аргумент обязан быть
 // функцией (ctx) => data; если передать данные — они ПОЛНОСТЬЮ заменяют
-// createData сценария, а не мержатся с ним. Поэтому собираем полный объект
-// вручную, с теми же полями, что в candidateTest.createData(). Проверено
-// чтением исходника @maxhub/max-bot-api (dist/scenario/engine.js).
+// createData сценария, а не мержатся с ним. Поэтому используем ту же
+// initialCandidateData(), что и candidateTest.createData() в scenario.js —
+// раньше здесь была своя копия со старыми полями answers/score (от версии
+// с одним тестом), из-за чего test1Score/test2Score оставались undefined
+// всю сессию. Проверено чтением исходника @maxhub/max-bot-api
+// (dist/scenario/engine.js).
 function beginTest(prefill) {
-  return scenarios.start(candidateTest, () => ({
-    fio: null,
-    phone: null,
-    grade: null,
-    answers: {},
-    score: 0,
-    ...(prefill || {}),
-  }));
+  return scenarios.start(candidateTest, () => initialCandidateData(prefill));
 }
 
 // Открытие бота по ссылке с сайта (с данными) — событие bot_started

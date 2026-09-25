@@ -30,19 +30,32 @@ function startTestKeyboard() {
   return Keyboard.inlineKeyboard([[Keyboard.button.callback("Пройти тест", "start-test")]]);
 }
 
-export const candidateTest = defineScenario()({
-  id: "candidate-test",
-  initialStep: "welcome",
-  idleTimeoutMs: 30 * 60 * 1000,
-  createData: () => ({
+// Единый источник формы начальных данных сессии — используется и здесь
+// (createData), и в bot.js при старте с prefill (ФИО/телефон с сайта),
+// чтобы структура не расходилась между файлами (расходилась раньше —
+// bot.js передавал scenarios.start() свою функцию createData, которая
+// ПОЛНОСТЬЮ заменяет эту, а не мержится с ней, и имела старые поля
+// answers/score от версии с одним тестом — test1Score оставался undefined
+// всю сессию).
+export function initialCandidateData(prefill) {
+  return {
     fio: null,
     phone: null,
     grade: null,
+    pendingDocs: [],
     test1Answers: {},
     test1Score: 0,
     test2Answers: {},
     test2Score: 0,
-  }),
+    ...(prefill || {}),
+  };
+}
+
+export const candidateTest = defineScenario()({
+  id: "candidate-test",
+  initialStep: "welcome",
+  idleTimeoutMs: 30 * 60 * 1000,
+  createData: () => initialCandidateData(),
   steps: buildSteps(),
 });
 
@@ -146,11 +159,16 @@ function buildSteps() {
 }
 
 // Строит шаги для одного теста: показ вопроса -> ожидание ответа -> следующий.
-// Для type "filter" неверный ответ сразу уводит на onFilterFail.
+// Для type "filter" неверный ответ обычно уводит на onFilterFail. Если у
+// вопроса задан followUpOnFail — вместо немедленного отсева сначала
+// спрашиваем готовность устранить проблему (оформить документ), и только
+// при отказе уводим на onFilterFail.
 function buildTestSteps(steps, { questions, prefix, testLabel, answersKey, scoreKey, onFilterFail, afterLast }) {
+  const stepAt = (idx) => (idx < questions.length ? `${prefix}${idx}` : afterLast);
+
   questions.forEach((question, i) => {
     const stepId = `${prefix}${i}`;
-    const nextStepId = i < questions.length - 1 ? `${prefix}${i + 1}` : afterLast;
+    const nextStepId = stepAt(i + 1);
 
     steps[stepId] = async ({ ctx }) => {
       await ctx.reply(
@@ -170,11 +188,16 @@ function buildTestSteps(steps, { questions, prefix, testLabel, answersKey, score
       const option = question.options.find((o) => o.text === chosenText);
       const answers = { ...data[answersKey], [question.id]: chosenText };
 
-      if (question.type === "filter" && option?.pass === false && onFilterFail) {
-        return transition.goto(onFilterFail, {
-          [answersKey]: answers,
-          rejectReason: option.rejectReason,
-        });
+      if (question.type === "filter" && option?.pass === false) {
+        if (question.followUpOnFail) {
+          return transition.goto(`${stepId}-followup`, { [answersKey]: answers });
+        }
+        if (onFilterFail) {
+          return transition.goto(onFilterFail, {
+            [answersKey]: answers,
+            rejectReason: option.rejectReason,
+          });
+        }
       }
       if (question.id === "t1q2") {
         // разряд удостоверения фиксируем отдельно для анкеты
@@ -184,6 +207,35 @@ function buildTestSteps(steps, { questions, prefix, testLabel, answersKey, score
       const score = data[scoreKey] + (option?.score ?? 0);
       return transition.goto(nextStepId, { [answersKey]: answers, [scoreKey]: score });
     };
+
+    if (question.followUpOnFail) {
+      const fu = question.followUpOnFail;
+      const afterWilling = stepAt(i + 1 + (fu.skipNext ?? 0));
+
+      steps[`${stepId}-followup`] = async ({ ctx }) => {
+        await ctx.reply(fu.text, { attachments: [questionKeyboard(fu)] });
+        return transition.goto(`${stepId}-followup-wait`, {});
+      };
+
+      steps[`${stepId}-followup-wait`] = async ({ ctx, data }) => {
+        const payload = ctx.callback?.payload;
+        if (!payload || !payload.startsWith(`${fu.id}:`)) {
+          await ctx.reply("Пожалуйста, выберите вариант кнопкой выше.");
+          return transition.stay();
+        }
+        const chosenText = payload.slice(fu.id.length + 1);
+        const willing = fu.options.find((o) => o.text === chosenText)?.willing;
+
+        if (!willing) {
+          return transition.goto(onFilterFail, {
+            rejectReason: question.options.find((o) => o.pass === false)?.rejectReason,
+          });
+        }
+        return transition.goto(afterWilling, {
+          pendingDocs: [...data.pendingDocs, fu.note],
+        });
+      };
+    }
   });
 }
 
@@ -198,7 +250,10 @@ async function saveResult({ data, rejectReason }) {
     ? { score: data.test2Score, maxScore: test2MaxScore, percent: test2Percent }
     : null;
 
-  const finalResult = rejectReason ? `Отсеян: ${rejectReason}` : "Прошёл оба теста, рекомендован";
+  const pendingNote = data.pendingDocs?.length ? ` (${data.pendingDocs.join(", ")})` : "";
+  const finalResult = rejectReason
+    ? `Отсеян: ${rejectReason}`
+    : `Прошёл оба теста, рекомендован${pendingNote}`;
 
   try {
     await appendCandidateRow({
