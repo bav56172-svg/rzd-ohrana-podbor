@@ -192,9 +192,16 @@
     var applyPhone = document.getElementById('apply_phone');
 
     if (applyConsent && applySubmitBtn) {
-      applyConsent.addEventListener('change', function () {
+      // 'change'/'input'/'click' продублированы: в Safari (особенно iOS)
+      // чекбокс внутри <label> иногда не даёт надёжного 'change' сразу —
+      // подписываемся на всё сразу, лишним срабатыванием ничего не сломаем.
+      var syncSubmitState = function () {
         applySubmitBtn.disabled = !applyConsent.checked;
+      };
+      ['change', 'input', 'click'].forEach(function (evt) {
+        applyConsent.addEventListener(evt, syncSubmitState);
       });
+      syncSubmitState();
 
       applySubmitBtn.addEventListener('click', function () {
         if (!applyConsent.checked || !applyName.value || !applyPhone.value) return;
@@ -207,7 +214,10 @@
           phone: applyPhone.value,
         }));
         var url = 'https://max.ru/' + MAX_BOT_USERNAME + '?start=' + payload;
-        window.open(url, '_blank', 'noopener');
+        // window.open(..., '_blank') в Safari (особенно iOS) иногда
+        // блокируется как всплывающее окно. Переход в этом же окне
+        // работает надёжнее для внешних диплинков такого рода.
+        window.location.href = url;
       });
     }
   </script>
