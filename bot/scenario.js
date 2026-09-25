@@ -1,4 +1,12 @@
 import { defineScenario, transition, Keyboard } from "@maxhub/max-bot-api";
+
+// @maxhub/max-bot-api не экспортирует helpers/format как публичный
+// подпуть (только "." и "./types" в package.json exports) — прямой
+// импорт даёт ERR_PACKAGE_PATH_NOT_EXPORTED. Формат разметки MAX
+// Markdown такой же (bold/italic из dist/helpers/format.js), просто
+// без обращения к неэкспортируемым внутренностям пакета.
+const bold = (text) => `**${text}**`;
+const italic = (text) => `_${text}_`;
 import {
   test1Questions,
   test2Questions,
@@ -31,10 +39,14 @@ function questionKeyboard(question) {
 }
 
 async function sendQuestion(ctx, testLabel, question, index, total) {
-  await ctx.reply(
-    `${testLabel}\nВопрос ${index + 1} из ${total} (${question.block})\n\n${question.text}`,
-    { attachments: [questionKeyboard(question)] },
-  );
+  const text =
+    `${bold(testLabel)}\n` +
+    `${italic(`Вопрос ${index + 1} из ${total} (${question.block})`)}\n\n` +
+    `${bold(question.text)}`;
+  await ctx.reply(text, {
+    format: "markdown",
+    attachments: [questionKeyboard(question)],
+  });
 }
 
 const WELCOME_TEXT =
@@ -58,10 +70,14 @@ function startTestKeyboard() {
   return Keyboard.inlineKeyboard([[Keyboard.button.callback("Пройти тест", "start-test")]]);
 }
 
+const BIRTHDATE_PROMPT = "Укажите дату рождения полностью: день, месяц, год (например 15.06.1998).";
+const BIRTHDATE_RE = /\d{1,2}\D+\d{1,2}\D+\d{4}/;
+
 export function initialCandidateData(prefill) {
   return {
     fio: null,
     phone: null,
+    birthdate: null,
     grade: null,
     pendingDocs: [],
     test1Answers: {},
@@ -94,8 +110,10 @@ function buildSteps() {
     }
     await ctx.answerOnCallback().catch(() => {});
     if (data.fio && data.phone) {
-      await sendQuestion(ctx, TEST1_LABEL, test1Questions[0], 0, test1Questions.length);
-      return transition.goto("t1_0", {});
+      // ФИО и телефон пришли с сайта, но дату рождения сайт не передаёт —
+      // спрашиваем её в любом случае перед стартом теста.
+      await ctx.reply(BIRTHDATE_PROMPT);
+      return transition.goto("ask-birthdate", {});
     }
     await ctx.reply("Как к вам обращаться? Напишите ФИО.");
     return transition.goto("ask-fio", {});
@@ -117,8 +135,18 @@ function buildSteps() {
       await ctx.reply("Пожалуйста, напишите номер телефона текстом.");
       return transition.stay();
     }
+    await ctx.reply(BIRTHDATE_PROMPT);
+    return transition.goto("ask-birthdate", { phone: text });
+  };
+
+  steps["ask-birthdate"] = async ({ ctx }) => {
+    const text = ctx.message?.body?.text?.trim();
+    if (!text || !BIRTHDATE_RE.test(text)) {
+      await ctx.reply(`Не похоже на полную дату. ${BIRTHDATE_PROMPT}`);
+      return transition.stay();
+    }
     await sendQuestion(ctx, TEST1_LABEL, test1Questions[0], 0, test1Questions.length);
-    return transition.goto("t1_0", { phone: text });
+    return transition.goto("t1_0", { birthdate: text });
   };
 
   buildTest(steps, {
@@ -274,6 +302,7 @@ async function saveResult({ data, rejectReason }) {
     await appendCandidateRow({
       fio: data.fio,
       phone: data.phone,
+      birthdate: data.birthdate,
       grade: data.grade,
       test1,
       test2,
