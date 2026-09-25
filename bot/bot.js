@@ -17,6 +17,16 @@ bot.api.setMyCommands([
   { name: "cancel", description: "Отменить прохождение теста" },
 ]);
 
+// Временная диагностика: логируем каждое входящее обновление (тип +
+// callback payload, если есть) — чтобы при следующем зависании кнопки
+// видеть, дошло ли событие вообще и что именно пришло, а не гадать.
+bot.use((ctx, next) => {
+  console.log(
+    `[update] type=${ctx.update.update_type} callback=${ctx.callback?.payload ?? "-"} text=${ctx.message?.body?.text ?? "-"}`,
+  );
+  return next();
+});
+
 bot.use(session());
 bot.use(scenarios.controllerMiddleware());
 
