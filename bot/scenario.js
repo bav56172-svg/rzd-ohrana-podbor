@@ -316,6 +316,10 @@ async function saveResult({ data, rejectReason }) {
       test1,
       test2,
       finalResult,
+      // Передаём причину отказа отдельным полем — appendCandidateRow
+      // использует её и для колонки "Причина отказа", и чтобы всегда
+      // отправлять отклонённых кандидатов в конец отчёта при сортировке.
+      rejectReason,
     });
     await sendCandidatesFile();
   } catch (err) {
