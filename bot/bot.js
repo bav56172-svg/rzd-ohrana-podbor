@@ -77,5 +77,51 @@ bot.command("cancel", async (ctx) => {
 bot.use(scenarios.interceptMiddleware());
 bot.command("test", beginTest(null));
 
+// Напоминание при тишине во время теста. Раньше движок сценариев просто
+// молча стирал прогресс кандидата через 30 минут без ответа (человек
+// отвлёкся/потерял сигнал — и должен был начинать заново, не зная об
+// этом). Теперь: idleTimeoutMs в scenario.js увеличен до 3 часов (данные
+// не стираются при обычной паузе), а здесь — свой лёгкий таймер, который
+// после 10 минут тишины сам присылает напоминание продолжить. Таймер
+// перезапускается на каждое сообщение кандидата, пока тест активен, и
+// снимается, как только тест завершён/отменён.
+const REMINDER_AFTER_MS = 10 * 60 * 1000;
+const REMINDER_TEXT =
+  "⏳ Не пропадайте! Тест ждёт вас — просто ответьте на последний вопрос, " +
+  "чтобы продолжить с того же места. Прогресс сохранён.";
+const reminderTimers = new Map();
+
+function clearReminder(chatId) {
+  const timer = reminderTimers.get(chatId);
+  if (timer) {
+    clearTimeout(timer);
+    reminderTimers.delete(chatId);
+  }
+}
+
+function scheduleReminder(chatId) {
+  clearReminder(chatId);
+  const timer = setTimeout(async () => {
+    reminderTimers.delete(chatId);
+    try {
+      await bot.api.sendMessageToChat(chatId, REMINDER_TEXT);
+    } catch (err) {
+      console.error(`Не удалось отправить напоминание chatId=${chatId}:`, err);
+    }
+  }, REMINDER_AFTER_MS);
+  reminderTimers.set(chatId, timer);
+}
+
+bot.use(async (ctx, next) => {
+  await next();
+  const chatId = ctx.chatId;
+  if (chatId === undefined) return;
+  if (ctx.session?.scenario) {
+    scheduleReminder(chatId);
+  } else {
+    clearReminder(chatId);
+  }
+});
+
 bot.start();
 console.log("Бот запущен.");
